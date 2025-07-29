@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>YOUR_CLIENT_ID_HERE</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>YOUR_REVERSED_CLIENT_ID_HERE</string>
+	<key>API_KEY</key>
+	<string>YOUR_API_KEY_HERE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>YOUR_GCM_SENDER_ID_HERE</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.cravely.app</string>
+	<key>PROJECT_ID</key>
+	<string>your-firebase-project-id</string>
+	<key>STORAGE_BUCKET</key>
+	<string>your-firebase-project-id.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<true/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>YOUR_GOOGLE_APP_ID_HERE</string>
+	<key>DATABASE_URL</key>
+	<string>https://your-firebase-project-id-default-rtdb.firebaseio.com/</string>
+</dict>
+</plist>
+
+<!-- 
+Instructions for setup:
+1. Go to https://console.firebase.google.com/
+2. Create a new project or select existing project
+3. Add iOS app with bundle ID: com.cravely.app
+4. Download the GoogleService-Info.plist file
+5. Replace this template file with the downloaded file
+6. Make sure the file is named GoogleService-Info.plist (without .template)
+7. Add the file to your Xcode project
+
+Firebase Services to Enable:
+- Authentication (Email/Password, Google Sign-In, Apple Sign-In)
+- Firestore Database
+- Storage (for user photos and restaurant images)
+- Analytics
+- Crashlytics
+- Cloud Messaging (for push notifications)
+- Cloud Functions (for backend logic)
+
+Security Rules for Firestore:
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can read and write their own data
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Restaurants are readable by all authenticated users
+    match /restaurants/{restaurantId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Only admins can write restaurant data
+    }
+    
+    // Reviews are readable by all, writable by authenticated users
+    match /reviews/{reviewId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.auth.uid == resource.data.userID;
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userID;
+    }
+    
+    // Wait time reports are readable by all, writable by authenticated users
+    match /waitTimeReports/{reportId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && request.auth.uid == resource.data.userID;
+    }
+  }
+}
+```
+
+Storage Rules:
+```
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // User profile images
+    match /users/{userId}/profile/{imageId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Review photos
+    match /reviews/{reviewId}/photos/{imageId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+    
+    // Restaurant images (admin only)
+    match /restaurants/{restaurantId}/images/{imageId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Admin only
+    }
+  }
+}
+```
+-->
